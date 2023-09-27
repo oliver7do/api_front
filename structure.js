@@ -1,5 +1,7 @@
 const REGISTERFORM = $("#registerForm");
 const LOGINFORM = $("#loginForm");
+getUserList();
+
 REGISTERFORM.on('submit', (e) => {
     // pour empecher l'envoi du formulaire
     e.preventDefault();
@@ -49,7 +51,7 @@ function register(pseudo, firstName, lastName, password, action) {
                     console.log("promesse non tenue...")
                 })
         })
-    .catch(error => console.log("tu me l'avais promis en tous cas..."))
+        .catch(error => console.log("tu me l'avais promis en tous cas..."))
 }
 
 // Login
@@ -63,16 +65,90 @@ function login(pseudo, password, action) {
         method: "post",
         body: JSON.stringify(data),
     }
+    // fetch
     fetch("http://localhost/api_back/", dataOption)
         .then(response => {
             response.json()
                 .then(data => {
                     console.log(data);
-                    // localStorage.drtItem("iduser", )
-                    window.location.href("");
+                    localStorage.setItem("iduser", data.userInfo.id_user)
+                    window.location.href = "index.html";
                 })
                 .catch(error => error);
         })
-       
+
         .catch(error => console.log("il y a une erreur."))
+}
+
+// fonction pour obtenir la liste des utilisateurs
+function getUserList() {
+    fetch("http://localhost/api_back/getuserlist/")
+        .then(response => {
+            response.json()
+                .then(data => {
+                    // console.log(data);
+                    // appel de printUsers
+                    printUsers(data.users);
+                })
+                .catch(error => console.log(error));
+        })
+        .catch(error => console.log(error));
+}
+
+// fonction pour afficher la liste des user
+function printUsers(listUser) {
+    // console.log(listUser)
+    listUser.forEach(element => {
+        // creer une balise p en lui ajoutant le prenom de l'utilisateur comme texte
+        // let p = $("p").append(element.firstname);
+        let p = document.createElement("p");
+        p.textContent = element.firstname;
+        p.id = element.id_user;
+
+        p.addEventListener("click", () => {
+            // console.log(localStorage.getItem("iduser"), p.id);
+            getListMessage(localStorage.getItem("iduser"), p.id);
+        })
+        // on ajoute le paragraphe comme enfant de la div avec la class user_list
+        $("#user_list").append(p);
+    });
+}
+
+
+// fonction pour avoir la liste des messages entre 2 utilisateurs getMessage
+
+function getListMessage(expeditor, receiver) {
+    fetch("http://localhost/api_back/getListMessage/" + expeditor + "/" + receiver)
+        .then(response => {
+            response.json()
+                .then(data => {
+                    // console.log(data);
+                    // appel de printUsers
+                    printMessages(data.listMessage);
+                    // console.log(data);
+                })
+                .catch(error => console.log(error));
+        })
+        .catch(error => console.log(error));
+}
+
+// fonction pour afficher la liste des mensage entre 2 users
+function printMessages(listMessage) {
+    document.getElementById("discution").innerHTML = "";
+    listMessage.forEach(element => {
+
+        // on crée une div et un paragraphe
+        let div = document.createElement("div");
+        let p = document.createElement("p");
+        // on ajoute paragraphe a la div
+        div.append(p);
+        // on ajoute au paragraphe son text
+        p.textContent = element.message;
+        if (element.expeditor_id == localStorage.getItem("")) {
+            fiv.className = "expediteur";
+        } else {
+            div.className = "recepteur";
+        }
+        $("#discution").append(div);
+    })
 }
