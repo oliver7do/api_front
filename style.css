@@ -1,7 +1,14 @@
+h1{
+    margin-left: 300px;
+    margin-top: 100px;
+    color: aliceblue;
+}
+
 body{
     background-color: rgb(14, 121, 78);
 }
 .box{
+    margin-bottom: 150px;
     width: 60%;
     border: solid 2px black;
     margin: 200px auto;
@@ -31,9 +38,17 @@ body{
 
 }
 .expediteur{
-    direction: ltr;
+    /* direction: ltr; */
+    width: 172px;
+    border: solid 2px;
+    margin: 5px 0px 5px 200px;
+    background-color: rgb(255, 30, 0);
 }
 
 .recepteur{
-    direction: rtl;
+    /* direction: rtl; */
+    width: 200px;
+        border: solid 2px;
+        margin: 5px 0;
+        background-color: rgb(154, 175, 17);
 }
